@@ -1,0 +1,46 @@
+spring:
+  security:
+    user:
+      name: geo
+      password: geo
+  boot:
+    admin:
+      client:
+        enabled: false
+  cloud:
+    kubernetes:
+      config:
+        enabled: false
+      reload:
+        monitoring-config-maps: false
+
+  liquibase:
+    enabled: true # true || false
+    drop-first: false # true || false
+    change-log: classpath:database-geo-changelog.xml
+    default-schema: geo
+    liquibase-schema: geo
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/skillbox
+    username: postgres
+    password: 1234
+    driverClassName: org.postgresql.Driver
+
+  jpa:
+      show-sql: false
+      hibernate:
+        ddl-auto: none # none || create_drop
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQL10Dialect
+          format_sql: true
+          default_schema: geo # geo search-engine
+      open-in-view: false
+
+logging:
+  level:
+    org.springframework: info # info || debug || trace
+
+  file:
+    name: application.log
