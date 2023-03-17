@@ -23,9 +23,8 @@ public interface GeoResource {
     @GetMapping("/country/{countryId}/city")
     ResponseEntity<List<CityDto>> getCityByCountryId(@PathVariable(name = "countryId") UUID countryId);
 
-    @PostMapping("/load")
-    @ResponseStatus(HttpStatus.CREATED)
-    void geoLoad(@RequestBody List<CountryDto> countryDto);
+    @PutMapping("/load")
+    ResponseEntity<String> geoLoad();
 
 
 

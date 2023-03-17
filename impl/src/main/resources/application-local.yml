@@ -44,3 +44,13 @@ logging:
 
   file:
     name: application.log
+
+geo-settings:
+  countries:
+    - countryName:  Россия
+      id: 113
+    - countryName:  Беларусь
+      id: 16
+    - countryName:  Казахстан
+      id: 40
+  userAgent: api-test-agent
