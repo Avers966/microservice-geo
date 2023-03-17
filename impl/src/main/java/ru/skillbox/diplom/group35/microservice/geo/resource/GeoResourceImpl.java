@@ -1,15 +1,13 @@
 package ru.skillbox.diplom.group35.microservice.geo.resource;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skillbox.diplom.group35.microservice.geo.dto.CityDto;
 import ru.skillbox.diplom.group35.microservice.geo.dto.CountryDto;
 import ru.skillbox.diplom.group35.microservice.geo.service.GeoService;
+import ru.skillbox.diplom.group35.microservice.geo.service.LoadService;
 
-import javax.annotation.security.PermitAll;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GeoResourceImpl implements GeoResource{
     private final GeoService geoService;
+    private final LoadService loadService;
 
     @Override
     public ResponseEntity<List<CountryDto>> getCountry() {
@@ -35,7 +34,7 @@ public class GeoResourceImpl implements GeoResource{
     }
 
     @Override
-    public void geoLoad(List<CountryDto> countryDto) {
-        geoService.geoLoad(countryDto);
+    public ResponseEntity<String> geoLoad() {
+        return loadService.loadGeoData();
     }
 }
