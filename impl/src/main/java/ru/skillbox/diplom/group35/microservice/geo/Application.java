@@ -5,6 +5,7 @@ import org.springframework.boot.actuate.autoconfigure.security.servlet.Managemen
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
 import ru.skillbox.diplom.group35.library.core.annotation.EnableBaseRepository;
 import ru.skillbox.diplom.group35.microservice.geo.model.City;
@@ -21,10 +22,13 @@ import java.util.UUID;
  * @Author Tretyakov Alexandr
  */
 
+
+
 @EnableBaseRepository
 @SpringBootApplication(exclude = {
         SecurityAutoConfiguration.class,
         ManagementWebSecurityAutoConfiguration.class})
+@EnableFeignClients
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

@@ -3,14 +3,14 @@ server:
 
 spring:
   profiles:
-    active: local
+    active: #local
   liquibase:
-    enabled: false
+    enabled: true
     drop-first: false
     change-log: classpath:database-geo-changelog.xml
 
   datasource:
-    url: jdbc:postgresql://postgres:5432/skillbox
+    url: jdbc:postgresql://10.109.30.75:5432/skillbox
     username: geo
     password: geo
     driverClassName: org.postgresql.Driver
@@ -25,3 +25,13 @@ spring:
         format_sql: true
         default_schema: geo
     open-in-view: false
+
+geo-settings:
+  countries:
+    - countryName:  Россия
+      id: 113
+    - countryName:  Беларусь
+      id: 16
+    - countryName:  Казахстан
+      id: 40
+  userAgent: api-test-agent
