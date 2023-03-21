@@ -22,7 +22,7 @@ spring:
     liquibase-schema: geo
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/skillbox
+    url: jdbc:postgresql://major:5432/skillbox
     username: postgres
     password: 1234
     driverClassName: org.postgresql.Driver

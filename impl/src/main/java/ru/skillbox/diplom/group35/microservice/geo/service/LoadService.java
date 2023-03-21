@@ -1,19 +1,21 @@
 package ru.skillbox.diplom.group35.microservice.geo.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.skillbox.diplom.group35.microservice.geo.config.Config;
 import ru.skillbox.diplom.group35.microservice.geo.config.CountryConfig;
+import ru.skillbox.diplom.group35.microservice.geo.dto.HeadHunterCityDto;
+import ru.skillbox.diplom.group35.microservice.geo.dto.HeadHunterCountryDto;
+import ru.skillbox.diplom.group35.microservice.geo.dto.HeadHunterRegionDto;
+import ru.skillbox.diplom.group35.microservice.geo.feign.HeadHunterClient;
 import ru.skillbox.diplom.group35.microservice.geo.model.City;
 import ru.skillbox.diplom.group35.microservice.geo.model.Country;
 import ru.skillbox.diplom.group35.microservice.geo.repository.CityRepository;
 import ru.skillbox.diplom.group35.microservice.geo.repository.CountryRepository;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,45 +32,28 @@ public class LoadService {
     private final CountryRepository countryRepository;
     private final CityRepository cityRepository;
     private final Config config;
+    private final HeadHunterClient hhClient;
 
     public ResponseEntity<String> loadGeoData() {
-        RestTemplate restTemplate = new RestTemplate();
-        String headHunterUrl = "https://api.hh.ru/areas";
-        ResponseEntity<String> response = restTemplate.getForEntity(headHunterUrl, String.class);
+        long start = System.currentTimeMillis();
         for (CountryConfig country : config.getCountries()) {
-            List<String> cityListForCountry = getCityListFromJson(response.getBody(),country.getCountryName());
+            HeadHunterCountryDto countryDto = hhClient.getCountry(country.getId());
+            List<String> cityListForCountry = getCityListFromObject(countryDto);
             UUID country_id = writeToTableCountry(country.getCountryName());
             List<String> CityListOutOfDataBase = createCityListOutOfDataBase(cityListForCountry, country_id);
             writeToTableCity(CityListOutOfDataBase, country_id);
         }
-        String status = "Данные для microservice-geo загружены";
+        long duration = System.currentTimeMillis() - start;
+        String status = "Feign client - the data for the microservice-geo is loaded in " + duration + " ms";
         return ResponseEntity.ok(status);
     }
 
-    public List<String> getCityListFromJson(String jsonString, String countryName) {
+    public List<String> getCityListFromObject(HeadHunterCountryDto countryDto) {
         ArrayList<String> cityList = new ArrayList<>();
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode rootNode = null;
-        try {
-            rootNode = mapper.readTree(jsonString);
-        }
-        catch (JsonProcessingException ex) {ex.printStackTrace();}
-        Iterator<JsonNode> countryIterator = rootNode.elements();
-        JsonNode countryNode = null;
-        while (countryIterator.hasNext()) {
-            countryNode = countryIterator.next();
-            if (countryNode.get("name").asText().equals(countryName)) break;
-        }
-        JsonNode regionsListNode = countryNode.get("areas");
-        Iterator<JsonNode> regionsIterator = regionsListNode.elements();
-        while (regionsIterator.hasNext()) {
-            JsonNode regionNode = regionsIterator.next();
-            if (regionNode.get("areas").isEmpty()) cityList.add(regionNode.get("name").asText());
-            JsonNode citiesListNode = regionNode.get("areas");
-            Iterator<JsonNode>  citiesIterator = citiesListNode.elements();
-            while (citiesIterator.hasNext()) {
-                JsonNode cityNode = citiesIterator.next();
-                cityList.add(cityNode.get("name").asText().replaceAll("[Ё]", "Е"));
+        for (HeadHunterRegionDto regionDto : countryDto.getAreas()) {
+            if (regionDto.getAreas().isEmpty()) cityList.add(regionDto.getName());
+            for (HeadHunterCityDto cityDto : regionDto.getAreas()) {
+                cityList.add(cityDto.getName());
             }
         }
         Collections.sort(cityList);
