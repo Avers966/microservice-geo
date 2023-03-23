@@ -1,0 +1,36 @@
+image: maven:3.8.3-jdk-11
+
+stages:
+  - build
+  - docker_deploy
+
+build:
+  stage: build
+  only: 
+    - develop
+  script:
+    - mvn -s maven-settings.xml clean package
+  cache:
+    paths:
+      - impl/target/*.jar
+  artifacts:
+    paths:
+      - ./impl/target
+
+docker_deploy:
+  image: docker:19.03.12
+  stage: docker_deploy
+  only: 
+    - develop
+  variables:
+    TAG: latest
+    REGISTRY_USER: alphateam35
+    REGISTRY_PASSWORD: alphateam35_skill
+    REGISTRY: docker.io
+    REGISTRY_IMAGE: alphateam35/microservice-geo:$TAG
+  before_script:
+    - docker logout
+    - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASSWORD"
+  script:
+    - docker build . -t $REGISTRY_IMAGE
+    - docker push $REGISTRY_IMAGE

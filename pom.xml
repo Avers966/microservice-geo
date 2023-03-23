@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>microservice-geo</artifactId>
-    <groupId>ru.skillbox.diplom.group35</groupId>
     <version>${revision}${sha1}${changelist}</version>
     <packaging>pom</packaging>
 
