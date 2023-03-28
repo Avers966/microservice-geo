@@ -15,4 +15,5 @@ import java.util.List;
 @Repository
 public interface CountryRepository extends BaseRepository<Country> {
     List<Country> findCountriesByNameCountry(String nameCountry);
+
 }

@@ -43,7 +43,10 @@ logging:
     org.springframework: info # info || debug || trace
 
   file:
-    name: application.log
+    name:  application.log
+
+
+
 
 geo-settings:
   countries:
@@ -53,4 +56,6 @@ geo-settings:
       id: 16
     - countryName:  Казахстан
       id: 40
+#    - countryName:  Грузия
+#      id: 28
   userAgent: api-test-agent

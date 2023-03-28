@@ -3,6 +3,7 @@ image: maven:3.8.3-jdk-11
 stages:
   - build
   - docker_deploy
+  - deploy_prod
 
 build:
   stage: build
@@ -24,13 +25,27 @@ docker_deploy:
     - develop
   variables:
     TAG: latest
-    REGISTRY_USER: alphateam35
-    REGISTRY_PASSWORD: alphateam35_skill
-    REGISTRY: docker.io
-    REGISTRY_IMAGE: alphateam35/microservice-geo:$TAG
+
   before_script:
     - docker logout
     - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASSWORD"
   script:
-    - docker build . -t $REGISTRY_IMAGE
-    - docker push $REGISTRY_IMAGE
+    - docker build . -t $REGISTRY_IMAGE:$TAG
+    - docker push $REGISTRY_IMAGE:$TAG
+
+deploy_prod:
+  stage: deploy_prod
+  only:
+    - develop
+  except:
+    - tags
+  before_script:
+    - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $PROD_HOST >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - ssh $PROD_USER@$PROD_HOST "kubectl rollout restart -n $NAMESPACE deployment $DEPLOYMENT_NAME"
