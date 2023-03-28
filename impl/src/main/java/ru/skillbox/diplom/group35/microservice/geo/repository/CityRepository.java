@@ -16,5 +16,8 @@ import java.util.UUID;
  */
 @Repository
 public interface CityRepository extends BaseRepository<City> {
+
     List<City> findByCountryId(UUID countryId);
+
+    void deleteByCountryId(UUID countryId);
 }

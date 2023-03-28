@@ -1,5 +1,6 @@
 package ru.skillbox.diplom.group35.microservice.geo.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 import ru.skillbox.diplom.group35.library.core.dto.base.BaseDto;
@@ -13,6 +14,7 @@ import java.util.List;
  */
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class CountryDto extends BaseDto {
 
     private  String title;
