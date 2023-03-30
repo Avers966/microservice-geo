@@ -9,6 +9,7 @@ build:
   stage: build
   only: 
     - develop
+
   script:
     - mvn -s maven-settings.xml clean package
   cache:
@@ -23,6 +24,7 @@ docker_deploy:
   stage: docker_deploy
   only: 
     - develop
+
   variables:
     TAG: latest
 
@@ -37,6 +39,7 @@ deploy_prod:
   stage: deploy_prod
   only:
     - develop
+
   except:
     - tags
   before_script:
