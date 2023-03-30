@@ -25,16 +25,16 @@ public class GeoResourceImpl implements GeoResource{
 
     @Override
     public ResponseEntity<List<CountryDto>> getCountry() {
-        return geoService.getCountry();
+        return ResponseEntity.ok(geoService.getCountry());
     }
 
     @Override
     public ResponseEntity<List<CityDto>> getCityByCountryId(UUID countryId) {
-        return geoService.getCityByCountryId(countryId);
+        return ResponseEntity.ok(geoService.getCityByCountryId(countryId));
     }
 
     @Override
     public ResponseEntity<String> geoLoad() {
-        return loadService.loadGeoData();
+        return ResponseEntity.ok(loadService.loadGeoData());
     }
 }

@@ -1,8 +1,9 @@
 package ru.skillbox.diplom.group35.microservice.geo.service;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.skillbox.diplom.group35.microservice.geo.config.Config;
@@ -15,8 +16,6 @@ import ru.skillbox.diplom.group35.microservice.geo.model.City;
 import ru.skillbox.diplom.group35.microservice.geo.model.Country;
 import ru.skillbox.diplom.group35.microservice.geo.repository.CityRepository;
 import ru.skillbox.diplom.group35.microservice.geo.repository.CountryRepository;
-
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,9 +36,10 @@ public class LoadService {
     private final HeadHunterClient hhClient;
 
 
-
-
-    public ResponseEntity<String> loadGeoData() {
+    @Caching(evict = {
+            @CacheEvict(value="country", allEntries=true),
+            @CacheEvict(value="city", allEntries=true) })
+    public String loadGeoData() {
         long start = System.currentTimeMillis();
         deleteExcessCountry();
         for (CountryConfig country : config.getCountries()) {
@@ -55,7 +55,7 @@ public class LoadService {
         long duration = System.currentTimeMillis() - start;
         String status = "Feign client - the data for the microservice-geo is loaded in " + duration + " ms";
         log.info(status);
-        return ResponseEntity.ok(status);
+        return status;
     }
 
     public void deleteExcessCountry() {

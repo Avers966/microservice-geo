@@ -38,6 +38,17 @@ spring:
           default_schema: geo # geo search-engine
       open-in-view: false
 
+
+  redis:
+     host: localhost
+     timeout: 2000
+  cache:
+     redis:
+       time-to-live: 600000 # TTL ms
+  data:
+     redis:
+       repositories.enabled: false
+
 logging:
   level:
     org.springframework: info # info || debug || trace

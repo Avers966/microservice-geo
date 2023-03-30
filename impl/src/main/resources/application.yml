@@ -10,7 +10,7 @@ spring:
     change-log: classpath:database-geo-changelog.xml
 
   datasource:
-    url: jdbc:postgresql://${DB_HOST:10.109.30.75}:5432/${DB_DATABASE:skillbox}
+    url: jdbc:postgresql://${DB_HOST:postgres-service}:5432/${DB_DATABASE:skillbox}
     username: ${DB_USERNAME:geo}
     password: ${DB_PASSWORD:geo}
     driverClassName: org.postgresql.Driver
@@ -25,6 +25,17 @@ spring:
         format_sql: true
         default_schema: ${DB_SCHEMA:geo}
     open-in-view: false
+
+  redis:
+    host: redis-service
+    timeout: 2000
+  cache:
+    redis:
+      time-to-live: 600000 # TTL ms
+  data:
+    redis:
+      repositories.enabled: false
+
 
 geo-settings:
   countries:
