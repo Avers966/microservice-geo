@@ -55,6 +55,7 @@ public class LoadService {
         long duration = System.currentTimeMillis() - start;
         String status = "Feign client - the data for the microservice-geo is loaded in " + duration + " ms";
         log.info(status);
+        log.info("Обновлено всего стран " + config.getCountries().size());
         return status;
     }
 
