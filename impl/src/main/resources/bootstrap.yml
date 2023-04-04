@@ -2,17 +2,23 @@ spring:
   application:
     name: microservice-geo
 
+#  config:
+#    import: kubernetes
+
   cloud:
     kubernetes:
       secrets:
         sources:
           - name: microservice-geo
+            namespace: skillbox-alpha
       config:
         sources:
-          - name: library-core
-          - name: microservice-geo
+          - namespace: skillbox-alpha
+            name: microservice-geo
       reload:
         enabled: true
+        strategy: refresh # restart_context | shutdown
+        mode: event # polling
 
 management:
   endpoint:

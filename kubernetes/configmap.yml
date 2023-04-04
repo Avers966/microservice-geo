@@ -14,27 +14,46 @@ data:
               service-url: http://microservice-geo:8080
 
       liquibase:
-        enabled: false
+        enabled: true
         drop-first: false
         change-log: classpath:database-geo-changelog.xml
 
       datasource:
-        url: jdbc:postgresql://postgres:5432/social
-        username: ${DATASOURCE_USERNAME}
-        password: ${DATASOURCE_PASSWORD}
+        url: jdbc:postgresql://${DB_HOST}:5432/${DB_DATABASE}
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
         driverClassName: org.postgresql.Driver
         hikari:
           minimum-idle: 10
           maximum-pool-size: 50
 
       jpa:
-        show-sql: true
+        show-sql: false
         hibernate:
           ddl-auto: none
         properties:
           hibernate:
             dialect: org.hibernate.dialect.PostgreSQL10Dialect
             format_sql: true
-            default_schema: geo
+            default_schema: ${DB_SCHEMA}
         open-in-view: false
 
+      redis:
+        host: redis-service
+        timeout: 2000
+      cache:
+        redis:
+          time-to-live: 600000 # TTL ms
+      data:
+        redis:
+          repositories.enabled: false
+    
+    geo-settings:
+      countries:
+        - countryName:  Россия
+          id: 113
+        - countryName:  Беларусь
+          id: 16
+        - countryName:  Казахстан
+          id: 40
+      userAgent: api-test-agent
