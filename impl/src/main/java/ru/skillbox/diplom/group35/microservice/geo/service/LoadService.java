@@ -76,15 +76,16 @@ public class LoadService {
     }
 
     public List<String> getCityListFromObject(HeadHunterCountryDto countryDto) {
-        ArrayList<String> cityList = new ArrayList<>();
+        Set<String> cityList = new TreeSet<>();
         for (HeadHunterRegionDto regionDto : countryDto.getAreas()) {
             if (regionDto.getAreas().isEmpty()) cityList.add(regionDto.getName());
             for (HeadHunterCityDto cityDto : regionDto.getAreas()) {
                 cityList.add(cityDto.getName());
             }
         }
-        Collections.sort(cityList);
-        return cityList;
+//        Collections.sort(cityList);
+        List<String> returnCityList = new ArrayList<>(cityList);
+        return returnCityList;
     }
 
     public UUID writeToTableCountry(String nameCountry) {

@@ -23,8 +23,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://major:5432/skillbox
-    username: postgres
-    password: 1234
+    username: geo
+    password: geo
     driverClassName: org.postgresql.Driver
 
   jpa:
