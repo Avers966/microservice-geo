@@ -10,7 +10,7 @@ spring:
     change-log: classpath:database-geo-changelog.xml
 
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:5432/${DB_DATABASE}
+    url: jdbc:postgresql://${DB_HOST}/${DB_DATABASE}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driverClassName: org.postgresql.Driver
@@ -27,7 +27,7 @@ spring:
     open-in-view: false
 
   redis:
-    host: redis-service
+    host: ${REDIS_HOST}
     timeout: 2000
   cache:
     redis:
